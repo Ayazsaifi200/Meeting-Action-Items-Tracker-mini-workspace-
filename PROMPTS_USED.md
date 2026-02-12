@@ -68,7 +68,7 @@ if we have psql then why need aisqlite?
 
 **Context**: Questioning dependency choices in requirements.txt
 **Purpose**: Understanding why aiosqlite was listed when using PostgreSQL
-**Result**: Removed aiosqlite, kept psycopg2-binary for PostgreSQL
+**Result**: Removed aiosqlite; later migrated from PostgreSQL to SQLite (psycopg2-binary also removed)
 **Date**: February 12, 2026
 
 ---
@@ -79,8 +79,8 @@ if we have psql then why need aisqlite?
 - Used AI to generate FastAPI application structure
 - Created database models with SQLAlchemy
 - Built RESTful API endpoints for transcripts and action items
-- Integrated Google Gemini Flash 2.0 for LLM functionality
-- Set up health check endpoints
+- Integrated Google Gemini 2.5 Flash for LLM functionality
+- Set up health check endpoints with caching
 
 ### Frontend Development
 - Created React components with Material-UI
@@ -90,7 +90,7 @@ if we have psql then why need aisqlite?
 - Added form validation and error handling
 
 ### Database Setup
-- Created PostgreSQL database schema
+- Configured SQLite database (file-based, no server needed)
 - Configured SQLAlchemy ORM with relationships
 - Set up database initialization script
 - Implemented cascade deletion for related records
@@ -128,7 +128,7 @@ Return only the JSON array, no other text.
 ```
 
 **Purpose**: Extract structured action items from unstructured meeting transcript text
-**Model**: Gemini 2.0 Flash Experimental
+**Model**: Gemini 2.5 Flash
 **Output Format**: JSON array
 
 ---
@@ -148,12 +148,6 @@ python -m venv venv
 # Via Python environment tool
 configure_python_environment
 install_python_packages [list of packages]
-```
-
-### PostgreSQL Installation
-```bash
-winget search postgresql
-winget install "PostgreSQL 17"
 ```
 
 ### Frontend Setup
@@ -216,12 +210,13 @@ New-Item -ItemType Directory -Path "src/services" -Force
 
 ## Key Design Decisions
 
-### Why Gemini Flash 2.0?
+### Why Gemini 2.5 Flash?
 - Fast inference for real-time extraction
 - Cost-effective compared to Pro models
 - Excellent JSON output formatting
 - Large context window for meeting transcripts
-- Latest generation model from Google
+- Separate quota pool from older models (helps with free-tier rate limits)
+- Built-in retry logic handles 429 rate limits gracefully
 
 ### Architecture Choices
 - FastAPI for modern async Python backend
@@ -231,7 +226,7 @@ New-Item -ItemType Directory -Path "src/services" -Force
 - Axios for clean API client layer
 
 ### Database Design
-- PostgreSQL for reliability and ACID compliance
+- SQLite for simplicity (file-based, zero configuration, no server needed)
 - Normalization with foreign key relationships
 - Cascade deletion for data integrity
 - Timestamps for audit trail
@@ -247,12 +242,18 @@ No automated testing prompts were used, as tests were not implemented in this ve
 
 ---
 
-## Troubleshooting Prompts
+## Troubleshooting During Development
 
-### PostgreSQL Installation Issues
-- Searched for alternative installation methods
-- Verified PostgreSQL port configuration
-- Checked database connection string format
+### Database Migration
+- Initially set up with PostgreSQL, later migrated to SQLite for simplicity
+- Removed psycopg2-binary dependency, used SQLite's built-in support
+- Updated database.py connection string to use SQLite file path
+
+### LLM Model Changes
+- Started with gemini-2.0-flash-exp (model not found)
+- Switched to gemini-2.0-flash (worked but hit 429 rate limits on free tier)
+- Final: gemini-2.5-flash (separate quota, reliable on free tier)
+- Added retry logic with exponential backoff for rate limit resilience
 
 ### Dependency Management
 - Clarified psycopg2-binary vs aiosqlite usage
@@ -264,11 +265,7 @@ No automated testing prompts were used, as tests were not implemented in this ve
 
 ### .env Template Created
 ```env
-DATABASE_URL=postgresql://postgres:yourpassword@localhost:5432/meetingtracker
 GOOGLE_API_KEY=your_google_api_key_here
-SECRET_KEY=your_secret_key_here
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
 ```
 
 ---
@@ -277,8 +274,9 @@ ACCESS_TOKEN_EXPIRE_MINUTES=30
 
 Total development time: Approximately 2-3 hours
 Primary AI tool: GitHub Copilot / Claude / ChatGPT
-Languages used: Python, JavaScript, SQL
+Languages used: Python, JavaScript
 Frameworks: FastAPI, React
+Database: SQLite
 Total files created: 20+
 Lines of code: ~2500+
 

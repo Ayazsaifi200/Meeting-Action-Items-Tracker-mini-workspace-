@@ -10,7 +10,7 @@
   - Database configuration and session management
   - Health check endpoints
 
-- **LLM Integration**: AI helped structure the Google Gemini Flash 2.0 integration:
+- **LLM Integration**: AI helped structure the Google Gemini 2.5 Flash integration:
   - Service class architecture
   - Prompt engineering for action item extraction
   - JSON parsing and error handling
@@ -43,7 +43,7 @@
 ### 1. Dependency Versions ✓
 - Verified FastAPI, SQLAlchemy, and other package versions are compatible
 - Ensured React and Material-UI versions match
-- Checked google-generativeai library version supports Gemini 2.0 Flash
+- Checked google-generativeai library version supports Gemini 2.5 Flash
 
 ### 2. Database Configuration ✓
 - Reviewed SQLite connection configuration
@@ -87,11 +87,11 @@
 
 ### Provider: **Google (Vertex AI / Google AI)**
 
-### Model: **Gemini 2.0 Flash Experimental**
+### Model: **Gemini 2.5 Flash**
 
 ### Why This Choice?
 
-1. **Speed**: Gemini Flash 2.0 is optimized for fast inference, making it ideal for real-time action item extraction from meeting transcripts
+1. **Speed**: Gemini 2.5 Flash is optimized for fast inference, making it ideal for real-time action item extraction from meeting transcripts
 
 2. **Cost-Effective**: Flash variant is more economical than Pro models while maintaining good quality for structured text extraction tasks
 
@@ -99,7 +99,7 @@
 
 4. **Context Window**: Large enough to handle full meeting transcripts (typical meetings are 1000-5000 tokens)
 
-5. **Availability**: As of 2026, Gemini 2.0 Flash represents Google's latest generation with improved multimodal capabilities and reasoning
+5. **Availability**: Gemini 2.5 Flash has a separate quota pool from older models, which helps avoid rate limits on the free tier
 
 6. **API Access**: Simple integration via `google-generativeai` Python library with straightforward API key authentication
 
@@ -127,7 +127,7 @@ The Flash variant strikes the best balance between speed, cost, and quality for 
 
 ## Security Considerations Reviewed
 
-- Environment variables for sensitive data (API keys, database credentials)
+- Environment variables for sensitive data (API keys)
 - CORS configuration limits access to frontend origin
 - SQL injection prevention via SQLAlchemy ORM
 - No authentication implemented (noted in "What's Not Done" section)
@@ -141,8 +141,9 @@ The Flash variant strikes the best balance between speed, cost, and quality for 
 
 ## Known Limitations
 
-1. No retry logic for LLM API failures
-2. Limited error messages for users
+1. No user authentication/authorization
+2. Limited error messages for users in some edge cases
 3. No input sanitization beyond basic validation
 4. No rate limiting on API endpoints
 5. Session management not implemented
+6. Free-tier Gemini API has quota limits (mitigated by retry logic and health check caching)

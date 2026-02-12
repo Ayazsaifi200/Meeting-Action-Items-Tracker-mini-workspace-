@@ -149,7 +149,7 @@ function HealthStatus() {
                 <Paper elevation={2} sx={{ p: 3 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                     <CloudIcon sx={{ mr: 1, fontSize: 40 }} color="primary" />
-                    <Typography variant="h6">LLM Service (Google Gemini Flash 2.0)</Typography>
+                    <Typography variant="h6">LLM Service (Google Gemini 2.5 Flash)</Typography>
                   </Box>
                   <Chip
                     icon={getStatusIcon(health.llm_service)}

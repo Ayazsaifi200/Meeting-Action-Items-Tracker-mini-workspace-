@@ -25,9 +25,6 @@ Experienced software engineer specializing in full-stack web development with ex
 - Database Design & ORM (SQLAlchemy)
 
 ### Databases
-- PostgreSQL
-- MySQL
-- MongoDB
 - SQLite
 
 ### AI/ML
@@ -46,24 +43,13 @@ Experienced software engineer specializing in full-stack web development with ex
 
 ## Education
 
-**Degree**: [Your Degree]
-**University**: [Your University]
-**Year**: [Year]
+**Degree**: Btech in Computer Science With Specialization in AI/ML
+**University**: Sharda University
 
 ## Experience
 
-### [Current Position]
-**Company**: [Company Name]
-**Duration**: [Start Date] - Present
-
-- Developed and maintained full-stack web applications
-- Integrated AI/ML capabilities into production systems
-- Collaborated with cross-functional teams
-- Optimized application performance and scalability
-
-### [Previous Position]
-**Company**: [Company Name]
-**Duration**: [Start Date] - [End Date]
+**Company**: JP Morgan Chase & Co.
+**Role**: Software Engineer
 
 - Built RESTful APIs and microservices
 - Implemented database schemas and queries
@@ -82,23 +68,16 @@ A full-stack application leveraging Google Gemini AI to automatically extract an
 - Health monitoring system
 - Material-UI responsive design
 
-**Technologies**: React, Python, FastAPI, SQLite, Google Gemini Flash 2.0, SQLAlchemy, Material-UI
+**Technologies**: React, Python, FastAPI, SQLite, Google Gemini 2.5 Flash, SQLAlchemy, Material-UI
 
 ### [Other Projects]
-- [Project Name]: Brief description
-- [Project Name]: Brief description
-
-## Certifications
-
-- [Certification Name] - [Issuing Organization] - [Year]
-- [Certification Name] - [Issuing Organization] - [Year]
-
+Github: https://github.com/Ayazsaifi200
+Linkdin : https://www.linkedin.com/in/ayazsaifi/
 ## Contact
 
-**Email**: [your.email@example.com]
-**LinkedIn**: [linkedin.com/in/yourprofile]
-**GitHub**: [github.com/yourusername]
-**Portfolio**: [yourportfolio.com]
+**Email**: ayazzssaifi@gmail.com
+**LinkedIn**: https://www.linkedin.com/in/ayazsaifi/
+**GitHub**: https://github.com/Ayazsaifi200
 
 ## Interests
 
@@ -127,6 +106,3 @@ This project was developed as a demonstration of full-stack development capabili
 
 The application solves a real-world problem of extracting actionable tasks from unstructured meeting transcripts, demonstrating practical application of AI in productivity tools.
 
----
-
-*Note: Replace the placeholder information in brackets with your actual details.*

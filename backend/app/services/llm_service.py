@@ -23,7 +23,7 @@ class LLMService:
         self.model = genai.GenerativeModel('gemini-2.5-flash')
     
     def extract_action_items(self, transcript: str) -> List[Dict]:
-        """Extract action items from meeting transcript using Gemini Flash 2.0"""
+        """Extract action items from meeting transcript using Gemini 2.5 Flash"""
         
         prompt = f"""
         Analyze this meeting transcript and extract action items. For each action item, identify:

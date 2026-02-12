@@ -216,11 +216,11 @@ cd backend
 python setup_db.py
 ```
 
-### LLM Rate Limit (429 Error)
+### LLM Rate Limit 
 - The free tier has per-minute and per-day limits
 - Wait 1-2 minutes and try again
 - Avoid refreshing the Status page repeatedly (it uses API calls)
-- The app has built-in retry logic with 30s/60s backoff
+- The app has built-in retry logic with 30s/60s backoff, and health check results are cached for 2 minutes to reduce quota usage.
 
 ---
 
@@ -228,16 +228,16 @@ python setup_db.py
 
 You're ready to demo/use the app when:
 
-- [x] ✅ Backend shows startup message on port 8000
-- [x] ✅ Frontend opens browser on port 3000
-- [x] ✅ `/health` endpoint shows all "healthy"
-- [x] ✅ Status page shows all green indicators
-- [x] ✅ Can process a test transcript
-- [x] ✅ AI extracts action items automatically
-- [x] ✅ Can add, edit, delete, and complete items
-- [x] ✅ Filtering works (open/completed)
-- [x] ✅ History shows processed transcripts
-- [x] ✅ No error messages in console
+- ✅ Backend shows startup message on port 8000
+- ✅ Frontend opens browser on port 3000
+- ✅ `/health` endpoint shows all "healthy"
+- ✅ Status page shows all green indicators
+- ✅ Can process a test transcript
+- ✅ AI extracts action items automatically
+- ✅ Can add, edit, delete, and complete items
+- ✅ Filtering works (open/completed)
+- ✅ History shows processed transcripts
+- ✅ No error messages in console
 
 ---
 
@@ -290,7 +290,7 @@ If all commands succeed, you're ready to launch! 🚀
 
 ---
 
-**Last Updated**: February 12, 2026
+
 **Database**: SQLite (no server needed)
 **LLM Model**: Google Gemini 2.5 Flash
 **Status**: Ready for Launch

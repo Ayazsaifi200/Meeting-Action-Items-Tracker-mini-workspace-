@@ -16,22 +16,33 @@ A full-stack web application that extracts and manages action items from meeting
 
 ### Frontend
 - React 19.2.4
-- Material-UI (MUI)
-- React Router
-- Axios for API calls
-- date-fns for date formatting
+- Material-UI (MUI) 7.3.8
+- React Router 7.13.0
+- Axios 1.13.5 for API calls
+- date-fns 4.1.0 for date formatting
 
 ### Backend
 - Python 3.11+
 - FastAPI 0.104.1
 - SQLAlchemy 2.0.23 (ORM)
-- Uvicorn (ASGI server)
+- Uvicorn 0.24.0 (ASGI server)
+- Pydantic 2.5.0 (data validation)
 
 ### Database
-- SQLite (built-in, no server needed)
+- SQLite (file-based, no server needed)
 
 ### LLM
-- Google Gemini 2.5 Flash via google-generativeai library
+- Google Gemini 2.5 Flash via google-generativeai 0.3.2
+- Built-in retry logic (3 attempts with 30s/60s backoff for rate limits)
+- Health check caching (2-minute TTL using count_tokens)
+
+## Quick Start
+
+For a detailed step-by-step guide, see [QUICKSTART.md](QUICKSTART.md).
+
+For Windows users, use the batch scripts:
+- `start-backend.bat` — Activates venv and runs the backend server
+- `start-frontend.bat` — Starts the React development server
 
 ## Prerequisites
 
@@ -117,32 +128,53 @@ The application will open at http://localhost:3000
 mini-workspace/
 ├── backend/
 │   ├── app/
-│   │   ├── models/          # Database models
-│   │   ├── routers/         # API endpoints
-│   │   ├── services/        # Business logic (LLM service)
-│   │   ├── database.py      # Database configuration
-│   │   ├── schemas.py       # Pydantic schemas
-│   │   └── main.py          # FastAPI app
-│   ├── venv/                # Virtual environment
-│   ├── requirements.txt     # Python dependencies
-│   ├── .env                 # Environment variables (create from .env.example)
-│   ├── meetingtracker.db    # SQLite database (auto-created)
-│   ├── setup_db.py          # Database setup script
-│   └── run.py               # Server runner
+│   │   ├── models/
+│   │   │   └── __init__.py      # Transcript & ActionItem models
+│   │   ├── routers/
+│   │   │   ├── __init__.py
+│   │   │   ├── action_items.py   # CRUD endpoints for action items
+│   │   │   ├── health.py         # Health check endpoint
+│   │   │   └── transcripts.py    # Transcript processing endpoints
+│   │   ├── services/
+│   │   │   ├── __init__.py
+│   │   │   └── llm_service.py    # Gemini 2.5 Flash integration
+│   │   ├── __init__.py
+│   │   ├── database.py           # SQLite configuration & session
+│   │   ├── schemas.py            # Pydantic request/response models
+│   │   └── main.py               # FastAPI app & CORS config
+│   ├── venv/                     # Python virtual environment
+│   ├── .env                      # API key (not in git)
+│   ├── .env.example              # Environment template
+│   ├── meetingtracker.db         # SQLite database (auto-created, not in git)
+│   ├── requirements.txt          # Python dependencies
+│   ├── setup_db.py               # Database initialization script
+│   └── run.py                    # Uvicorn server launcher
 ├── src/
-│   ├── components/          # React components
-│   │   ├── HomePage.js
-│   │   ├── TranscriptProcessor.js
-│   │   ├── ActionItemsList.js
-│   │   ├── TranscriptHistory.js
-│   │   └── HealthStatus.js
+│   ├── components/
+│   │   ├── HomePage.js            # Landing page with feature overview
+│   │   ├── TranscriptProcessor.js # Paste & process meeting transcripts
+│   │   ├── ActionItemsList.js     # View/edit/filter action items
+│   │   ├── TranscriptHistory.js   # Last 5 processed transcripts
+│   │   └── HealthStatus.js        # System health dashboard
 │   ├── services/
-│   │   └── api.js           # API client
-│   ├── App.js               # Main React app
-│   └── index.js             # Entry point
+│   │   └── api.js                 # Axios API client layer
+│   ├── App.js                     # Router & theme setup
+│   ├── App.css                    # Global styles
+│   └── index.js                   # React entry point
 ├── public/
+│   └── index.html                 # HTML template
+├── .env                           # Frontend config (REACT_APP_API_URL)
+├── .gitignore
 ├── package.json
-└── README.md
+├── README.md
+├── QUICKSTART.md                  # Step-by-step startup guide
+├── AI_NOTES.md                    # AI usage documentation
+├── ABOUTME.md                     # Developer information
+├── PROMPTS_USED.md                # Prompts used during development
+├── CHECKLIST.md                   # Project requirements checklist
+├── PROJECT_SUMMARY.md             # Technical summary
+├── start-backend.bat              # One-click backend launcher (Windows)
+└── start-frontend.bat             # One-click frontend launcher (Windows)
 ```
 
 ## API Endpoints
@@ -151,71 +183,50 @@ mini-workspace/
 - `GET /health` - System health check
 
 ### Transcripts
-- `GET /transcripts/` - Get recent transcripts (default: 5)
-- `GET /transcripts/{id}` - Get specific transcript
-- `POST /transcripts/` - Create and process transcript
-- `DELETE /transcripts/{id}` - Delete transcript
+- `GET /transcripts/?limit=5` - Get recent transcripts (default: 5)
+- `GET /transcripts/{id}` - Get specific transcript with its action items
+- `POST /transcripts/` - Create transcript and auto-extract action items via AI
+- `DELETE /transcripts/{id}` - Delete transcript and all its action items (cascade)
 
 ### Action Items
-- `GET /action-items/` - Get all action items (filterable)
+- `GET /action-items/?transcript_id=&status=` - Get action items (filterable by transcript_id and status)
 - `GET /action-items/{id}` - Get specific action item
-- `POST /action-items/` - Create action item
-- `PUT /action-items/{id}` - Update action item
+- `POST /action-items/` - Create action item manually
+- `PUT /action-items/{id}` - Update action item fields
 - `DELETE /action-items/{id}` - Delete action item
 - `PATCH /action-items/{id}/complete` - Mark as completed
 
 ## What's Done ✅
 
-- [x] Full-stack architecture (React + FastAPI + SQLite)
-- [x] AI-powered action item extraction using Google Gemini 2.5 Flash
-- [x] CRUD operations for action items and transcripts
-- [x] Filtering by status (open/completed)
-- [x] Tagging system
-- [x] Transcript history (last 5)
-- [x] Health monitoring page
-- [x] Material-UI responsive design
-- [x] Error handling and validation
-- [x] Database setup automation
-- [x] CORS configuration
-- [x] RESTful API with automatic documentation
+- Full-stack architecture (React + FastAPI + SQLite)
+- AI-powered action item extraction using Google Gemini 2.5 Flash
+- CRUD operations for action items and transcripts
+- Filtering by status (open/completed)
+- Tagging system
+- Transcript history (last 5)
+- Health monitoring page
+- Material-UI responsive design
+- Error handling and validation
+- Database setup automation
+- CORS configuration
+- RESTful API with automatic documentation
 
-## What's Not Done ❌
-
-- [ ] User authentication/authorization
-- [ ] Advanced search functionality
-- [ ] Export action items (CSV, PDF)
-- [ ] Email notifications for due dates
-- [ ] Real-time collaboration features
-- [ ] Pagination for large datasets
-- [ ] Unit tests and integration tests
-- [ ] Docker containerization
-- [ ] Production deployment configuration
-- [ ] Advanced analytics dashboard
 
 ## Troubleshooting
 
 ### Backend won't start
-- Verify virtual environment is activated
-- Check `.env` file has the GOOGLE_API_KEY set
+- Verify virtual environment is activated: `.\venv\Scripts\Activate.ps1`
+- Check that `backend\.env` file exists with `GOOGLE_API_KEY` set
 - Run `python setup_db.py` to initialize the database
 
 ### Database connection errors
-- Run `python setup_db.py` to create the SQLite database file
-- Ensure `meetingtracker.db` exists in the backend directory
+- Run `python setup_db.py` — this creates the `meetingtracker.db` file automatically
+- SQLite is file-based and requires no server or service
 
-### LLM service unhealthy
-- Verify `GOOGLE_API_KEY` in `.env` is valid
-- Check internet connection
-- Ensure API key has Gemini API access enabled
 
-### LLM returns empty results or 429 errors
-- Free-tier Gemini API has rate limits — wait 1–2 minutes and retry
-- The app uses Gemini 2.5 Flash with built-in retry logic (3 attempts with backoff)
-- Check quota at: https://console.cloud.google.com/apis/api/generativelanguage.googleapis.com/quotas
-
-### Frontend can't connect to backend
-- Ensure backend is running on http://localhost:8000
-- Check CORS settings in `backend/app/main.py`
+### Action items not extracted
+- Verify the backend is running and LLM shows "HEALTHY" on the Status page
+- If you get empty results, it may be a temporary rate limit — try again after a minute
 
 ## License
 

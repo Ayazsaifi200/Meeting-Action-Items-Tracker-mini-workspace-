@@ -118,7 +118,7 @@ function HomePage() {
             <ListItem>• Mark items as done/pending</ListItem>
             <ListItem>• Filter by status (open/completed)</ListItem>
             <ListItem>• Tag categorization</ListItem>
-            <ListItem>• AI-powered extraction using Google Gemini Flash 2.0</ListItem>
+            <ListItem>• AI-powered extraction using Google Gemini 2.5 Flash</ListItem>
           </List>
         </Paper>
       </Box>

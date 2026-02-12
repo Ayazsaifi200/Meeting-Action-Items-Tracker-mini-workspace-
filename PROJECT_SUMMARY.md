@@ -11,7 +11,7 @@ All components have been successfully set up and are ready for testing.
 ### Backend (Python + FastAPI)
 - ✅ Complete RESTful API with 11 endpoints
 - ✅ SQLite database integration with SQLAlchemy ORM (no server needed)
-- ✅ Google Gemini 2.5 Flash LLM integration for AI-powered extraction
+- ✅ Google Gemini 2.5 Flash LLM integration for AI-powered extraction (with built-in retry logic and health check caching)
 - ✅ Health monitoring system
 - ✅ CORS configuration for React frontend
 - ✅ Automatic API documentation (Swagger/OpenAPI)
