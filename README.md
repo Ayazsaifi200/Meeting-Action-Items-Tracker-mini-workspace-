@@ -1,70 +1,226 @@
-# Getting Started with Create React App
+# Meeting Action Items Tracker
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack web application that extracts and manages action items from meeting transcripts using AI.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **AI-Powered Extraction**: Uses Google Gemini 2.5 Flash to automatically identify tasks, owners, and due dates from meeting transcripts
+- **Action Item Management**: Edit, add, delete, and mark items as complete
+- **Filtering**: Filter by status (open/completed)
+- **Tagging System**: Categorize action items with custom tags
+- **History**: View last 5 processed transcripts
+- **Health Monitoring**: Real-time system health status for backend, database, and LLM connections
+- **Responsive UI**: Clean Material-UI based interface
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Frontend
+- React 19.2.4
+- Material-UI (MUI)
+- React Router
+- Axios for API calls
+- date-fns for date formatting
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Backend
+- Python 3.11+
+- FastAPI 0.104.1
+- SQLAlchemy 2.0.23 (ORM)
+- Uvicorn (ASGI server)
 
-### `npm test`
+### Database
+- SQLite (built-in, no server needed)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### LLM
+- Google Gemini 2.5 Flash via google-generativeai library
 
-### `npm run build`
+## Prerequisites
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Python 3.11 or higher
+- Node.js 16+ and npm
+- Google API Key for Gemini (get from https://makersuite.google.com/app/apikey)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Installation & Setup
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 1. Clone and Navigate
+```bash
+cd mini-workspace
+```
 
-### `npm run eject`
+### 2. Backend Setup
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+cd backend
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Create and activate virtual environment (Windows PowerShell)
+python -m venv venv
+.\venv\Scripts\Activate.ps1
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+# Install dependencies (will be done automatically if you configured Python environment)
+# Or manually: pip install -r requirements.txt
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+# Create .env file
+copy .env.example .env
+```
 
-## Learn More
+Edit `backend/.env` with your configuration:
+```env
+GOOGLE_API_KEY=your_google_api_key_here
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+**Important**: Add your Google API key. The database uses SQLite and requires no configuration.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 3. Database Setup
 
-### Code Splitting
+```bash
+# SQLite requires no server - the database file is created automatically
+python setup_db.py
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### 4. Start Backend Server
 
-### Analyzing the Bundle Size
+```bash
+# From backend directory
+python run.py
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+The API will be available at http://localhost:8000
+- API Docs: http://localhost:8000/docs
+- Health Check: http://localhost:8000/health
 
-### Making a Progressive Web App
+### 5. Frontend Setup
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Open a new terminal:
 
-### Advanced Configuration
+```bash
+# From project root (mini-workspace)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+# Install dependencies
+npm install
 
-### Deployment
+# Start development server
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+The application will open at http://localhost:3000
 
-### `npm run build` fails to minify
+## Usage
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. **Home Page**: Overview of features and quick navigation
+2. **Process Meeting**: Paste your meeting transcript text and let AI extract action items
+3. **Action Items**: View, edit, add, delete, and mark items as complete. Filter by status.
+4. **History**: Browse your last 5 processed transcripts
+5. **Status**: Check system health (backend, database, LLM connection)
+
+## Project Structure
+
+```
+mini-workspace/
+├── backend/
+│   ├── app/
+│   │   ├── models/          # Database models
+│   │   ├── routers/         # API endpoints
+│   │   ├── services/        # Business logic (LLM service)
+│   │   ├── database.py      # Database configuration
+│   │   ├── schemas.py       # Pydantic schemas
+│   │   └── main.py          # FastAPI app
+│   ├── venv/                # Virtual environment
+│   ├── requirements.txt     # Python dependencies
+│   ├── .env                 # Environment variables (create from .env.example)
+│   ├── meetingtracker.db    # SQLite database (auto-created)
+│   ├── setup_db.py          # Database setup script
+│   └── run.py               # Server runner
+├── src/
+│   ├── components/          # React components
+│   │   ├── HomePage.js
+│   │   ├── TranscriptProcessor.js
+│   │   ├── ActionItemsList.js
+│   │   ├── TranscriptHistory.js
+│   │   └── HealthStatus.js
+│   ├── services/
+│   │   └── api.js           # API client
+│   ├── App.js               # Main React app
+│   └── index.js             # Entry point
+├── public/
+├── package.json
+└── README.md
+```
+
+## API Endpoints
+
+### Health
+- `GET /health` - System health check
+
+### Transcripts
+- `GET /transcripts/` - Get recent transcripts (default: 5)
+- `GET /transcripts/{id}` - Get specific transcript
+- `POST /transcripts/` - Create and process transcript
+- `DELETE /transcripts/{id}` - Delete transcript
+
+### Action Items
+- `GET /action-items/` - Get all action items (filterable)
+- `GET /action-items/{id}` - Get specific action item
+- `POST /action-items/` - Create action item
+- `PUT /action-items/{id}` - Update action item
+- `DELETE /action-items/{id}` - Delete action item
+- `PATCH /action-items/{id}/complete` - Mark as completed
+
+## What's Done ✅
+
+- [x] Full-stack architecture (React + FastAPI + SQLite)
+- [x] AI-powered action item extraction using Google Gemini 2.5 Flash
+- [x] CRUD operations for action items and transcripts
+- [x] Filtering by status (open/completed)
+- [x] Tagging system
+- [x] Transcript history (last 5)
+- [x] Health monitoring page
+- [x] Material-UI responsive design
+- [x] Error handling and validation
+- [x] Database setup automation
+- [x] CORS configuration
+- [x] RESTful API with automatic documentation
+
+## What's Not Done ❌
+
+- [ ] User authentication/authorization
+- [ ] Advanced search functionality
+- [ ] Export action items (CSV, PDF)
+- [ ] Email notifications for due dates
+- [ ] Real-time collaboration features
+- [ ] Pagination for large datasets
+- [ ] Unit tests and integration tests
+- [ ] Docker containerization
+- [ ] Production deployment configuration
+- [ ] Advanced analytics dashboard
+
+## Troubleshooting
+
+### Backend won't start
+- Verify virtual environment is activated
+- Check `.env` file has the GOOGLE_API_KEY set
+- Run `python setup_db.py` to initialize the database
+
+### Database connection errors
+- Run `python setup_db.py` to create the SQLite database file
+- Ensure `meetingtracker.db` exists in the backend directory
+
+### LLM service unhealthy
+- Verify `GOOGLE_API_KEY` in `.env` is valid
+- Check internet connection
+- Ensure API key has Gemini API access enabled
+
+### LLM returns empty results or 429 errors
+- Free-tier Gemini API has rate limits — wait 1–2 minutes and retry
+- The app uses Gemini 2.5 Flash with built-in retry logic (3 attempts with backoff)
+- Check quota at: https://console.cloud.google.com/apis/api/generativelanguage.googleapis.com/quotas
+
+### Frontend can't connect to backend
+- Ensure backend is running on http://localhost:8000
+- Check CORS settings in `backend/app/main.py`
+
+## License
+
+MIT
+
+## Author
+
+See ABOUTME.md for developer information.
