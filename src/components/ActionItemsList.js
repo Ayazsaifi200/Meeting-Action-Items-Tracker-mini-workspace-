@@ -60,15 +60,7 @@ function ActionItemsList() {
     transcript_id: 1
   });
 
-  useEffect(() => {
-    fetchActionItems();
-    fetchTranscripts();
-  }, [fetchActionItems, fetchTranscripts]);
-
-  useEffect(() => {
-    applyFilter();
-  }, [applyFilter]);
-
+  // Define functions before using them in useEffect
   const fetchTranscripts = useCallback(async () => {
     try {
       const data = await getTranscripts();
@@ -100,6 +92,15 @@ function ActionItemsList() {
       setFilteredItems(actionItems.filter(item => item.status === filter));
     }
   }, [filter, actionItems]);
+
+  useEffect(() => {
+    fetchActionItems();
+    fetchTranscripts();
+  }, [fetchActionItems, fetchTranscripts]);
+
+  useEffect(() => {
+    applyFilter();
+  }, [applyFilter]);
 
   const handleToggleComplete = async (item) => {
     try {
