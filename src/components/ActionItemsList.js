@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import {
   Container,
@@ -63,22 +63,22 @@ function ActionItemsList() {
   useEffect(() => {
     fetchActionItems();
     fetchTranscripts();
-  }, []);
+  }, [fetchActionItems, fetchTranscripts]);
 
   useEffect(() => {
     applyFilter();
-  }, [filter, actionItems]);
+  }, [applyFilter]);
 
-  const fetchTranscripts = async () => {
+  const fetchTranscripts = useCallback(async () => {
     try {
       const data = await getTranscripts();
       setTranscripts(data);
     } catch (err) {
       console.error('Error fetching transcripts:', err);
     }
-  };
+  }, []);
 
-  const fetchActionItems = async () => {
+  const fetchActionItems = useCallback(async () => {
     setLoading(true);
     try {
       const transcriptId = location.state?.transcriptId;
@@ -91,15 +91,15 @@ function ActionItemsList() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [location.state?.transcriptId]);
 
-  const applyFilter = () => {
+  const applyFilter = useCallback(() => {
     if (filter === 'all') {
       setFilteredItems(actionItems);
     } else {
       setFilteredItems(actionItems.filter(item => item.status === filter));
     }
-  };
+  }, [filter, actionItems]);
 
   const handleToggleComplete = async (item) => {
     try {

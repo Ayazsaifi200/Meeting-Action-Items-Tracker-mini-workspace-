@@ -2,9 +2,9 @@
 
 ## Developer Information
 
-**Name**: [Your Name Here]
+**Name**: Ayaz
 
-**Role**: Full-Stack Developer
+**Role**: Software Engineer
 
 ## Professional Summary
 
