@@ -17,7 +17,11 @@ app = FastAPI(
 # Configure CORS for React frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # React development server
+    allow_origins=[
+        "http://localhost:3000",  # React development server
+        "https://meeting-action-items-tracker-mini-w-ten.vercel.app",  # Production frontend
+        "https://meeting-action-items-tracker-mini-workspace-hcq8.vercel.app",  # Alternative Vercel URL
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
